@@ -286,14 +286,20 @@ export default function SellerOrderPage() {
                       </TableCell>
                       <TableCell>
                         <div className="space-y-1">
-                          {order.items.map((it) => (
-                            <div key={it._id} className="text-sm">
-                              {it.name}{" "}
-                              <span className="text-gray-500">
-                                x{it.quantity}
-                              </span>
-                            </div>
-                          ))}
+                          {order.items && order.items.length > 0 ? (
+                            order.items.map((it) => (
+                              <div key={it._id} className="text-sm">
+                                {it.name}{" "}
+                                <span className="text-gray-500">
+                                  x{it.quantity}
+                                </span>
+                              </div>
+                            ))
+                          ) : (
+                            <span className="text-sm text-gray-400">
+                              No items
+                            </span>
+                          )}
                         </div>
                       </TableCell>
                       <TableCell className="font-medium">

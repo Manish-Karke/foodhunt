@@ -1,10 +1,19 @@
 "use client";
-import { Formik, Form } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Button } from "@/components/ui/button";
-
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
+import { User, Mail, Phone, MapPin, Lock } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import axios from "axios";
@@ -97,15 +106,164 @@ const Register = () => {
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
-              {({ isSubmitting }) => (
+              {({ isSubmitting, setFieldValue, values }) => (
                 <Form className="space-y-4">
-                  {/* Your fields */}
+                  {/* Email */}
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="email"
+                      className="flex items-center space-x-2"
+                    >
+                      <Mail className="h-4 w-4 text-primary" />
+                      <span>Email</span>
+                    </Label>
+                    <Field
+                      as={Input}
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      className="transition-all focus:ring-2 focus:ring-primary"
+                    />
+                    <ErrorMessage
+                      name="email"
+                      component="div"
+                      className="text-destructive text-sm"
+                    />
+                  </div>
+
+                  {/* Role */}
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="role"
+                      className="flex items-center space-x-2"
+                    >
+                      <User className="h-4 w-4 text-primary" />
+                      <span>Role</span>
+                    </Label>
+                    <Select
+                      value={values.role}
+                      onValueChange={(value) => setFieldValue("role", value)}
+                    >
+                      <SelectTrigger className="transition-all focus:ring-2 focus:ring-primary">
+                        <SelectValue placeholder="Select your role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="user">Food Lover (User)</SelectItem>
+                        <SelectItem value="seller">
+                          Restaurant Owner (Seller)
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <ErrorMessage
+                      name="role"
+                      component="div"
+                      className="text-destructive text-sm"
+                    />
+                  </div>
+
+                  {/* Phone Number */}
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="phoneNumber"
+                      className="flex items-center space-x-2"
+                    >
+                      <Phone className="h-4 w-4 text-primary" />
+                      <span>Phone Number</span>
+                    </Label>
+                    <Field
+                      as={Input}
+                      id="phoneNumber"
+                      name="phoneNumber"
+                      type="tel"
+                      placeholder="Enter your phone number"
+                      className="transition-all focus:ring-2 focus:ring-primary"
+                    />
+                    <ErrorMessage
+                      name="phoneNumber"
+                      component="div"
+                      className="text-destructive text-sm"
+                    />
+                  </div>
+
+                  {/* Location */}
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="location"
+                      className="flex items-center space-x-2"
+                    >
+                      <MapPin className="h-4 w-4 text-primary" />
+                      <span>Location</span>
+                    </Label>
+                    <Field
+                      as={Input}
+                      id="location"
+                      name="location"
+                      placeholder="Enter your location"
+                      className="transition-all focus:ring-2 focus:ring-primary"
+                    />
+                    <ErrorMessage
+                      name="location"
+                      component="div"
+                      className="text-destructive text-sm"
+                    />
+                  </div>
+
+                  {/* Password */}
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="password"
+                      className="flex items-center space-x-2"
+                    >
+                      <Lock className="h-4 w-4 text-primary" />
+                      <span>Password</span>
+                    </Label>
+                    <Field
+                      as={Input}
+                      id="password"
+                      name="password"
+                      type="password"
+                      placeholder="Create a strong password"
+                      className="transition-all focus:ring-2 focus:ring-primary"
+                    />
+                    <ErrorMessage
+                      name="password"
+                      component="div"
+                      className="text-destructive text-sm"
+                    />
+                  </div>
+
+                  {/* Confirm Password */}
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="confirmPassword"
+                      className="flex items-center space-x-2"
+                    >
+                      <Lock className="h-4 w-4 text-primary" />
+                      <span>Confirm Password</span>
+                    </Label>
+                    <Field
+                      as={Input}
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type="password"
+                      placeholder="Confirm your password"
+                      className="transition-all focus:ring-2 focus:ring-primary"
+                    />
+                    <ErrorMessage
+                      name="confirmPassword"
+                      component="div"
+                      className="text-destructive text-sm"
+                    />
+                  </div>
+
+                  {/* Submit Button */}
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full ..."
+                    className="w-full bg-[#F9A51D] hover:bg-orange-700 text-primary-foreground font-semibold py-3 transition-all duration-200 transform hover:scale-[1.02]"
                   >
-                    {isSubmitting ? "Creating Account..." : "Sign Up"}
+                    {isSubmitting ? "Creating Account..." : "Create Account"}
                   </Button>
                 </Form>
               )}
