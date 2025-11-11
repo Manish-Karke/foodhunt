@@ -54,8 +54,9 @@ const Login = () => {
         values
       );
 
+      console.log("User data:", data);
       if (data?.isLoggedIn) {
-        if (data.user.role === "admin") {
+        if (data.user.role === "Admin") {
           router.push("/admin/dashboard");
         } else if (data.user.role === "seller") {
           router.push("/seller/dashboard");

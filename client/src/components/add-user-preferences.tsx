@@ -1,12 +1,12 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import Image from "next/image";
 import { toast } from "sonner";
 import { updateUserPreferences } from "@/redux/reducerSlices/userSlice";
 import { useRouter } from "next/navigation";
-
 import { MultiSelect } from "./multi-select";
 import {
   Card,
@@ -17,9 +17,7 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Button } from "./ui/button";
-import { useAppSelector } from "@/redux/store";
 
-// Define types
 interface Product {
   name: string;
   category?: {
@@ -27,24 +25,24 @@ interface Product {
   };
 }
 
-interface MultiSelectOption {
+interface FormattedProduct {
   value: string;
   label: string;
-  icon?: React.ComponentType<{ className?: string }>;
+  icon: () => React.ReactNode;
 }
 
-function transformProducts(products: Product[]): MultiSelectOption[] {
-  const uniqueItemsMap = new Map<string, MultiSelectOption>();
+function transformProducts(products: Product[]): FormattedProduct[] {
+  const uniqueItemsMap = new Map<string, FormattedProduct>();
 
   products.forEach((product) => {
     const name = product.name;
-    const emoji = product.category?.emoji || "food";
+    const emoji = product.category?.emoji;
 
     if (!uniqueItemsMap.has(name)) {
       uniqueItemsMap.set(name, {
         value: name,
         label: name,
-        icon: () => <span className="text-lg">{emoji}</span>,
+        icon: () => <p>{emoji}</p>,
       });
     }
   });
@@ -56,23 +54,28 @@ export default function UserPreferences() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  // Redux state
-  const currentUserPreferences = useAppSelector(
-    (state) => state.user.userPreferences
-  );
-  const userId = useAppSelector((state) => state.user._id);
+  interface RootState {
+    user: {
+      userPreferences: string[];
+      _id: string;
+    };
+  }
 
-  // Local state
+  const currentUserPreferences = useSelector(
+    (state: RootState) => state.user.userPreferences
+  );
+  const userId = useSelector((state: RootState) => state.user._id);
+
   const [products, setProducts] = useState<Product[]>([]);
   const [favouriteProducts, setFavouriteProducts] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formattedProducts, setFormattedProducts] = useState<
-    MultiSelectOption[]
+    FormattedProduct[]
   >([]);
 
-  // Fetch products
+  // Fetch products on mount
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -82,7 +85,7 @@ export default function UserPreferences() {
         );
         setProducts(response.data);
         setError(null);
-      } catch (err: unknown) {
+      } catch (err) {
         console.error("Error fetching products:", err);
         setError("Failed to load products.");
       } finally {
@@ -93,19 +96,21 @@ export default function UserPreferences() {
     fetchProducts();
   }, []);
 
-  // Sync Redux preferences → local state
+  // Sync Redux preferences to local state
   useEffect(() => {
     if (currentUserPreferences && Array.isArray(currentUserPreferences)) {
       setFavouriteProducts(currentUserPreferences);
     }
   }, [currentUserPreferences]);
 
-  // Format for MultiSelect
+  // Format products for MultiSelect component
   useEffect(() => {
-    setFormattedProducts(transformProducts(products));
+    if (products.length > 0) {
+      setFormattedProducts(transformProducts(products));
+    }
   }, [products]);
 
-  // Submit preferences
+  // Handle preferences submission
   const handleNext = async () => {
     if (favouriteProducts.length === 0) {
       toast.error("Please select at least one favorite food.");
@@ -122,7 +127,7 @@ export default function UserPreferences() {
       dispatch(updateUserPreferences(favouriteProducts));
       toast.success("Preferences saved successfully!");
       router.push("/");
-    } catch (err: unknown) {
+    } catch (err) {
       console.error("Error saving preferences:", err);
       toast.error("Failed to save preferences. Please try again.");
     } finally {
@@ -193,15 +198,15 @@ export default function UserPreferences() {
           <CardFooter>
             <Button
               onClick={handleNext}
-              disabled={isSubmitting || favouriteProducts.length === 0}
+              disabled={isSubmitting}
               className={`w-full py-3 px-6 rounded-full text-lg font-semibold text-white transition-all duration-300 ease-in-out
-                ${
-                  isSubmitting || favouriteProducts.length === 0
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-orange-400 hover:bg-orange-500 active:bg-orange-600 shadow-lg hover:shadow-xl"
-                }`}
+              ${
+                isSubmitting
+                  ? "bg-blue-300 cursor-not-allowed"
+                  : "bg-orange-400 hover:bg-orange-500 active:bg-orange-600 cursor-pointer shadow-lg hover:shadow-xl"
+              }`}
             >
-              {isSubmitting ? "Saving..." : "Next"}
+              {isSubmitting ? "Saving preferences..." : "Next"}
             </Button>
           </CardFooter>
         </Card>
