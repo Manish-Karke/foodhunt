@@ -182,6 +182,5 @@ To get a local copy up and running, follow these simple steps.
 
 If you have any questions, feel free to reach out!
 
-* **Your Name/Team Name**: [Your Name/Team Name]
-* **Email**: [Your Email Address]
-* **GitHub**: [Link to your GitHub profile/project]
+* **Your Name/Team Name**: Manish karki
+* **Email**: karkimanish188@gmail.com
