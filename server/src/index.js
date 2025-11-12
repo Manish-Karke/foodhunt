@@ -20,10 +20,7 @@ app.get("/ping", (req, res) => {
 
 app.use(
   cors({
-    origin: [
-      "https://your-frontend-domain.vercel.app",
-      "http://localhost:3000",
-    ],
+    origin: ["https://foodhunt-5wn8.vercel.app", "http://localhost:3000"],
     credentials: true,
   })
 );
