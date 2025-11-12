@@ -16,7 +16,6 @@ import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/redux/store";
 import { addLoginDetails } from "@/redux/reducerSlices/userSlice";
 import { useEffect } from "react";
-// import type { RootState } from "../../redux/store.ts"; // Adjust path if needed
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -30,24 +29,29 @@ const validationSchema = Yup.object({
     .required("Password is required"),
 });
 
+interface LoginFormValues {
+  email: string;
+  password: string;
+}
+
 const Login = () => {
   const { isLoggedIn } = useAppSelector((state) => state.user);
   const router = useRouter();
   const dispatch = useDispatch();
 
-  // Fixed: Added missing dependencies
+  // Redirect if already logged in
   useEffect(() => {
     if (isLoggedIn) {
       router.push("/");
     }
   }, [isLoggedIn, router]);
 
-  const initialValues = {
+  const initialValues: LoginFormValues = {
     email: "",
     password: "",
   };
 
-  const handleSubmit = async (values: typeof initialValues) => {
+  const handleSubmit = async (values: LoginFormValues) => {
     try {
       const { data } = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/login`,
@@ -55,6 +59,14 @@ const Login = () => {
       );
 
       console.log("User data:", data);
+
+      // Store login details in Redux first
+      dispatch(addLoginDetails(data));
+
+      // Show success message
+      toast.success(data?.message || "Login successful!");
+
+      // Navigate based on role
       if (data?.isLoggedIn) {
         if (data.user.role === "Admin") {
           router.push("/admin/dashboard");
@@ -64,11 +76,7 @@ const Login = () => {
           router.push("/");
         }
       }
-
-      toast.success(data?.message || "Login successful!");
-      dispatch(addLoginDetails(data));
-    } catch (error: unknown) {
-      // Narrowing the error
+    } catch (error) {
       if (axios.isAxiosError(error)) {
         const message =
           error.response?.data?.message || "Login failed. Please try again.";
@@ -76,6 +84,7 @@ const Login = () => {
       } else {
         toast.error("An unexpected error occurred.");
       }
+      console.error("Login error:", error);
     }
   };
 
