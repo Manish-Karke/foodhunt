@@ -20,10 +20,11 @@ app.get("/ping", (req, res) => {
 
 app.use(
   cors({
-    origin: ["https://foodhunt-5wn8.vercel.app", "http://localhost:3000"],
-    credentials: true,
+    origin: "https://foodhunt-dq4n.vercel.app", // Replace with your actual frontend domain
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
-);
+);  
 app.use(express.json());
 app.use(userRouter);
 app.use(kycRouter);
