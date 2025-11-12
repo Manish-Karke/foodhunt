@@ -59,7 +59,9 @@ export default function CategoriesPage() {
   );
 
   const fetchCategories = async () => {
-    const { data } = await axios.get("http://localhost:8080/categories");
+    const { data } = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/categories`
+    );
     setCategories(data);
   };
 
@@ -68,7 +70,7 @@ export default function CategoriesPage() {
   }, []);
 
   const handleCreateCategory = async () => {
-    await axios.post(process.env.NEXT_PUBLIC_API_URL + "/categories", {
+    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/categories`, {
       name: formData.name,
       description: formData.description,
       emoji: formData.emoji,
@@ -110,7 +112,7 @@ export default function CategoriesPage() {
 
   const handleDeleteCategory = async (id: string) => {
     const { data } = await axios.delete(
-      "http://localhost:8080/categories/" + id
+      `${process.env.NEXT_PUBLIC_API_URL}/categories/id`
     );
     if (data) fetchCategories();
   };

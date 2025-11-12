@@ -18,7 +18,15 @@ app.get("/ping", (req, res) => {
   res.send("pong");
 });
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "https://your-frontend-domain.vercel.app",
+      "http://localhost:3000",
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(userRouter);
 app.use(kycRouter);
