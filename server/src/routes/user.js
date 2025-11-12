@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 const saltRounds = 10;
 import User from "../models/user.js";
-import sendEmail from "../utils/sendEmail.js";
+
 const userRouter = Router();
 
 userRouter.post("/register", async (req, res) => {
@@ -52,22 +52,22 @@ userRouter.get("/users", async (req, res) => {
 });
 
 userRouter.get("/users/:id", async (req, res) => {
-  const  data = await User.findById(req.params.id);
+  const data = await User.findById(req.params.id);
   return res.send(data);
 });
-userRouter.patch("/users/:id/add-preferences", async (req, res) => {
+userRouter.post("/users/:id/add-preferences", async (req, res) => {
   try {
     const { userPreferences } = req.body;
     const user = await User.findById(req.params.id);
     if (!user) {
-      res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
     user.userPreferences = userPreferences;
     await user.save();
     res.status(200).json({ message: "User preferences added" });
   } catch (err) {
     const errorMessage = err.message;
-    res.status(500).json({ message: `Server Error: ${err.message}` });
+    res.status(500).json({ message: `Server Error: ${errorMessage}` });
   }
 });
 

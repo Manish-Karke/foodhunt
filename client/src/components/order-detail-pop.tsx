@@ -41,7 +41,10 @@ export default function OrderDetailPopup({
     async function fetchOrder() {
       setLoading(true);
       try {
-        const res = await axios.get(`http://localhost:8080/orders/${orderId}`);
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}`
+        );
+
         setOrder(res.data.data);
       } catch (error) {
         console.error("Error fetching order:", error);

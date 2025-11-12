@@ -1,6 +1,5 @@
 import express from "express";
 import Product from "../models/product.js";
-import category from "../models/category.js";
 import User from "../models/user.js";
 import CapitalizeWords from "../utils/capitalizeWords.js";
 import runPrompt from "../utils/generalizeChipName.js";

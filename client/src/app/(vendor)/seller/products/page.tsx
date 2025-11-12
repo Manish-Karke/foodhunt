@@ -518,7 +518,7 @@ const Products = () => {
                   <div className="relative">
                     {product.imageName ? (
                       <Image
-                        src={`http://localhost:8080/images/${product.imageName}`}
+                        src={`${process.env.NEXT_PUBLIC_API_URL}/image/${product.imageName}`}
                         alt={product.name}
                         width={400}
                         height={300}

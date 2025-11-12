@@ -119,7 +119,7 @@ export default function UserPreferences() {
 
     setIsSubmitting(true);
     try {
-      await axios.patch(
+      await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}/add-preferences`,
         { userPreferences: favouriteProducts }
       );

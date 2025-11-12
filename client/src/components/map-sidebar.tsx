@@ -41,7 +41,7 @@ const MapSidebar: React.FC<SidebarProps> = ({
   const fetchOrders = async () => {
     try {
       const { data } = await axios.get<{ data: OrderItem[] }>(
-        "http://localhost:8080/orders/"
+        `${process.env.NEXT_PUBLIC_API_URL}/orders/`
       );
 
       if (data && Array.isArray(data.data)) {
